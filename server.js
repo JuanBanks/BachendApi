@@ -9,15 +9,12 @@ const app = express();
 app.use(express.json());
 
 // Conexión a MongoDB
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,    // Opción para usar el nuevo parser de URL
-  useUnifiedTopology: true,  // Opción para usar el nuevo motor de descubrimiento y monitoreo
-})
-.then(() => console.log('Conectado a MongoDB'))
-.catch((err) => console.error('Error al conectar a MongoDB:', err));
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log('Conectado a MongoDB'))
+  .catch((err) => console.error('Error al conectar a MongoDB:', err));
 
 // Rutas
-app.use('/api/Bitacora', itemRoutes);
+app.use('/api/Bitacoras', itemRoutes);
 
 // Iniciar servidor
 const PORT = process.env.PORT || 3000;
