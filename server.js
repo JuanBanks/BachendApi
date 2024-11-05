@@ -1,7 +1,8 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
-const itemRoutes = require('./routes/BitacorasRoutes');
+const bitacoraRoutes = require('./routes/BitacorasRoutes');
+const usuarioRoutes = require('./routes/UsuarioRoutes'); 
 
 const app = express();
 
@@ -19,7 +20,8 @@ app.get('/', (req, res) => {
 });
 
 // Rutas de API
-app.use('/api/bitacoras', itemRoutes);
+app.use('/api/bitacoras', bitacoraRoutes);
+app.use('/api/usuarios', usuarioRoutes); // Añade esta línea para las rutas de usuarios
 
 // Iniciar servidor
 const PORT = process.env.PORT || 3000;
