@@ -8,13 +8,13 @@ const jwt = require('jsonwebtoken');
 router.post('/register', async (req, res) => {
   try {
     const { nombreCompleto, email, contraseña } = req.body;
-    
+
     // Verificar si el usuario ya existe
     const usuarioExistente = await Usuario.findOne({ email });
     if (usuarioExistente) {
       return res.status(400).json({ message: 'El usuario ya existe' });
     }
-    
+
     // Crear un nuevo usuario
     const nuevoUsuario = new Usuario({
       nombreCompleto,
@@ -23,11 +23,11 @@ router.post('/register', async (req, res) => {
       estado: true, // Estado activo por defecto
       rol: 'Colaborador' // Rol por defecto
     });
-    
+
     const usuarioGuardado = await nuevoUsuario.save();
-    
+
     // No es necesario retornar la contraseña
-    const { contraseña: _, ...usuarioSinContraseña } = usuarioGuardado.toObject(); 
+    const { contraseña: _, ...usuarioSinContraseña } = usuarioGuardado.toObject();
 
     res.status(201).json(usuarioSinContraseña); // Retornar el usuario sin la contraseña
   } catch (error) {
@@ -53,6 +53,58 @@ router.post('/login', async (req, res) => {
     res.status(200).json({ token, rol: usuario.rol }); // Retornar el rol junto con el token
   } catch (error) {
     res.status(400).json({ message: 'Error al iniciar sesión', error });
+  }
+});
+
+// Ruta para obtener todos los usuarios (panel de administración)
+router.get('/usuarios', async (req, res) => {
+  try {
+    // Buscar todos los usuarios y excluir la contraseña
+    const usuarios = await Usuario.find({}, '-contraseña');
+    res.status(200).json(usuarios);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener los usuarios', error });
+  }
+});
+
+// Ruta para actualizar el estado de un usuario
+router.put('/usuarios/:id/estado', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { estado } = req.body;
+
+    // Actualizar el estado del usuario
+    const usuarioActualizado = await Usuario.findByIdAndUpdate(id, { estado }, { new: true });
+    if (!usuarioActualizado) {
+      return res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+
+    res.status(200).json(usuarioActualizado);
+  } catch (error) {
+    res.status(400).json({ message: 'Error al actualizar el estado del usuario', error });
+  }
+});
+
+// Ruta para actualizar el rol de un usuario
+router.put('/usuarios/:id/rol', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { rol } = req.body;
+
+    // Validar que el rol es uno de los permitidos
+    if (!['Colaborador', 'Administrador', 'Investigador'].includes(rol)) {
+      return res.status(400).json({ message: 'Rol no válido' });
+    }
+
+    // Actualizar el rol del usuario
+    const usuarioActualizado = await Usuario.findByIdAndUpdate(id, { rol }, { new: true });
+    if (!usuarioActualizado) {
+      return res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+
+    res.status(200).json(usuarioActualizado);
+  } catch (error) {
+    res.status(400).json({ message: 'Error al actualizar el rol del usuario', error });
   }
 });
 
