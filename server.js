@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bitacoraRoutes = require('./routes/BitacorasRoutes');
-const usuarioRoutes = require('./routes/UsuarioRoutes'); 
+const usuarioRoutes = require('./routes/UsuariosRoutes'); 
 
 const app = express();
 
