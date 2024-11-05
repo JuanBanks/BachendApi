@@ -1,11 +1,16 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
-
 const usuarioSchema = new mongoose.Schema({
   nombreCompleto: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   contraseña: { type: String, required: true },
+  estado: { type: Boolean, default: true }, // Campo para estado activo/deshabilitado
+  rol: { 
+    type: String, 
+    enum: ['Colaborador', 'Administrador', 'Investigador'], // Permitir solo estos valores
+    default: 'Colaborador' // Rol por defecto
+  },
 });
 
 // Middleware de Mongoose para encriptar la contraseña antes de guardar

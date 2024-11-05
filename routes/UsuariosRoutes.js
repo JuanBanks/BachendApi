@@ -8,10 +8,28 @@ const jwt = require('jsonwebtoken');
 router.post('/register', async (req, res) => {
   try {
     const { nombreCompleto, email, contraseña } = req.body;
-    const hashedPassword = await bcrypt.hash(contraseña, 10);
-    const nuevoUsuario = new Usuario({ nombreCompleto, email, contraseña: hashedPassword });
+    
+    // Verificar si el usuario ya existe
+    const usuarioExistente = await Usuario.findOne({ email });
+    if (usuarioExistente) {
+      return res.status(400).json({ message: 'El usuario ya existe' });
+    }
+    
+    // Crear un nuevo usuario
+    const nuevoUsuario = new Usuario({
+      nombreCompleto,
+      email,
+      contraseña, // La contraseña será encriptada en el middleware del modelo
+      estado: true, // Estado activo por defecto
+      rol: 'Colaborador' // Rol por defecto
+    });
+    
     const usuarioGuardado = await nuevoUsuario.save();
-    res.status(201).json(usuarioGuardado);
+    
+    // No es necesario retornar la contraseña
+    const { contraseña: _, ...usuarioSinContraseña } = usuarioGuardado.toObject(); 
+
+    res.status(201).json(usuarioSinContraseña); // Retornar el usuario sin la contraseña
   } catch (error) {
     res.status(400).json({ message: 'Error al registrar el usuario', error });
   }
@@ -31,8 +49,8 @@ router.post('/login', async (req, res) => {
     }
 
     // Crear token JWT
-    const token = jwt.sign({ id: usuario._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.status(200).json({ token });
+    const token = jwt.sign({ id: usuario._id, rol: usuario.rol }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    res.status(200).json({ token, rol: usuario.rol }); // Retornar el rol junto con el token
   } catch (error) {
     res.status(400).json({ message: 'Error al iniciar sesión', error });
   }
