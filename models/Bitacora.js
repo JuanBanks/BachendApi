@@ -6,7 +6,6 @@ const especieSchema = new mongoose.Schema({
   familia: { type: String, required: false },
   cantidadMuestras: { type: Number, required: true },
   estadoPlanta: { type: String, required: true },
-  fotos: [{ type: String }], // Array de URLs o nombres de archivos de fotos
 });
 
 const bitacoraSchema = new mongoose.Schema({
@@ -18,7 +17,6 @@ const bitacoraSchema = new mongoose.Schema({
   },
   condicionesClimaticas: { type: String, required: true },
   descripcionHabitat: { type: String, required: true },
-  fotosSitio: [{ type: String }], // Array de URLs o nombres de archivos de fotos
   especiesRecolectadas: [especieSchema], // Array de detalles de especies recolectadas
   observacionesAdicionales: { type: String },
   estadoActivo: { type: Boolean, default: true },
