@@ -57,7 +57,7 @@ router.post('/login', async (req, res) => {
 });
 
 // Ruta para obtener todos los usuarios (panel de administración)
-router.get('/usuarios', async (req, res) => {
+router.get('/', async (req, res) => { // Cambiado a '/'
   try {
     // Buscar todos los usuarios y excluir la contraseña
     const usuarios = await Usuario.find({}, '-contraseña');
@@ -68,7 +68,7 @@ router.get('/usuarios', async (req, res) => {
 });
 
 // Ruta para actualizar el estado de un usuario
-router.put('/usuarios/:id/estado', async (req, res) => {
+router.put('/:id/estado', async (req, res) => { // Cambiado a ':id/estado'
   try {
     const { id } = req.params;
     const { estado } = req.body;
@@ -86,7 +86,7 @@ router.put('/usuarios/:id/estado', async (req, res) => {
 });
 
 // Ruta para actualizar el rol de un usuario
-router.put('/usuarios/:id/rol', async (req, res) => {
+router.put('/:id/rol', async (req, res) => { // Cambiado a ':id/rol'
   try {
     const { id } = req.params;
     const { rol } = req.body;
