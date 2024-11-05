@@ -1,10 +1,14 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors'); // Importa cors
 const bitacoraRoutes = require('./routes/BitacorasRoutes');
 const usuarioRoutes = require('./routes/UsuariosRoutes'); 
 
 const app = express();
+
+// Middleware para habilitar CORS
+app.use(cors()); // Permitir CORS para todas las rutas
 
 // Middleware para parsear JSON
 app.use(express.json());
