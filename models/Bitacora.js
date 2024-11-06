@@ -20,6 +20,7 @@ const bitacoraSchema = new mongoose.Schema({
   especiesRecolectadas: [especieSchema], // Array de detalles de especies recolectadas
   observacionesAdicionales: { type: String },
   estadoActivo: { type: Boolean, default: true },
+  imageUrls: [{ type: String }], // Nuevo campo para guardar URLs de las imágenes
 });
 
 module.exports = mongoose.model('Bitacora', bitacoraSchema);
