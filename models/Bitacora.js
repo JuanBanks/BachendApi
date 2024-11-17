@@ -21,7 +21,7 @@ const bitacoraSchema = new mongoose.Schema({
   observacionesAdicionales: { type: String },
   estadoActivo: { type: Boolean, default: true },
   imageUrls: [{ type: String }],
-  Autor: [{ type: String }], // Nuevo campo para guardar URLs de las imágenes
+  Autor: { type: String }, // Nuevo campo para guardar URLs de las imágenes
 });
 
 module.exports = mongoose.model('Bitacora', bitacoraSchema);
